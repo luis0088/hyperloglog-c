@@ -23,6 +23,14 @@ static inline int registerPos(uint64_t x, int b){
 	return (x>>(64-b))+1;
 }
 
+void free_hll(HyperloglogC *hll){
+	if(hll==NULL){
+		return;
+	}
+	free(hll->registers);
+	free(hll);
+}
+
 HyperloglogC * new_hll(const int b, const size_t elements_size){
 	HyperloglogC *hll = (HyperloglogC *) malloc(sizeof(HyperloglogC));
 	hll->elements_size = elements_size;
@@ -53,8 +61,13 @@ HyperloglogC * new_hll(const int b, const size_t elements_size){
 void add_hll(HyperloglogC *hll, const void *element){
 	uint64_t arr[2];
 	qhashmurmur3_128(element, hll->elements_size, arr);
-	uint64_t w =arr[1]<<(hll->b);
-	int j = registerPos(arr[1],hll->b);
+	uint64_t hash = arr[0] ^ arr[1];
+	add_hash(hll,hash);	
+}
+
+void add_hash(HyperloglogC *hll, const uint64_t hash){
+	uint64_t w =hash<<(hll->b);
+	int j = registerPos(hash,hll->b);
 	hll->registers[j] = max(leftmostbit(w),hll->registers[j]);
 }
 int size_hll(const HyperloglogC *hll){
@@ -74,9 +87,7 @@ int size_hll(const HyperloglogC *hll){
 		if(counter!=0){
 			z= hll->nregisters*(log(((double)hll->nregisters)/counter));
 		}
-	}else if(z<=(((1.0/30.0))*powl(2,32))  ){
-		z=z;
-	}else{
+	}else if(z>(((1.0/30.0))*powl(2,32))  ){
 		long double power2 = powl(2,32);
 		z = -powl(2,32)*log(1-(z/(power2)));
 	}
