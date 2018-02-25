@@ -1,8 +1,0 @@
-epoch: 1, time: Sun Feb 25 21:44:34 2018
-, unique objects: 12573
-epoch: 2, time: Sun Feb 25 21:44:40 2018
-, unique objects: 12573
-epoch: 1, time: Sun Feb 25 21:45:36 2018
-, unique objects: 12573
-epoch: 1, time: Sun Feb 25 21:47:19 2018, unique objects: 12573
-epoch: 1, time: Sun Feb 25 21:55:37 2018, unique objects: 12573
