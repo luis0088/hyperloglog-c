@@ -37,7 +37,7 @@ int main(int argc, char ** argv){
     	exit(1);
     }
 
-	HyperloglogC * hll = new_hll(5,sizeof(uint64_t));
+	HyperloglogC * hll = new_hll(b,sizeof(uint64_t));
     unsigned int epoch =1;
     int number_of_objects=0;
     int cnt =0;
