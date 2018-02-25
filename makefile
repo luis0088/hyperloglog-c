@@ -1,12 +1,20 @@
-main: main.o murmurhash3.o hyperloglogC.o
+all: main zero
+CFLAG=-I./include
+zero: obj/zeroMQ_hll.o obj/murmurhash3.o obj/hyperloglogC.o
+	gcc $^ -o $@ -lzmq -lm
+
+
+main: obj/main.o obj/murmurhash3.o obj/hyperloglogC.o
 	gcc -o $@ $^  -lm
 
-main.o: main.c
-	gcc -c $^ -o $@ 
+obj/main.o: src/main.c
+	gcc -c $^ $(CFLAG)  -o $@ 
+obj/zeroMQ_hll.o: src/zeroMQ_hll.c
+	gcc -c $^ $(CFLAG) -o $@ 
 
-murmurhash3.o: murmurhash3.c
-	gcc -c $^ -o $@
+obj/murmurhash3.o: src/murmurhash3.c
+	gcc -c $^ $(CFLAG) -o $@
 
-hyperloglogC.o: hyperloglogC.c
-	gcc -c $^ -o $@
+obj/hyperloglogC.o: src/hyperloglogC.c
+	gcc -c $^ $(CFLAG) -o $@
 
